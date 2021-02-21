@@ -4,5 +4,6 @@ services:
   - docker
 before_install:
   - sudo docker run -d --name db -p 2021:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=practice -e MYSQL_USER=student -e MYSQL_PASSWORD=123 mysql
+after_deploy:
   - sudo docker build -t borlok/app .
   - sudo docker run --name spring -p 8080:8080 --link db borlok/app
