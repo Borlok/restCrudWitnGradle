@@ -41,7 +41,3 @@ dependencies {
 	implementation group: 'org.flywaydb', name: 'flyway-core', version: '7.5.3'
 	implementation group: 'com.bmuschko', name: 'gradle-docker-plugin', version: '6.7.0'
 }
-
-test {
-	useJUnitPlatform()
-}
