@@ -49,7 +49,7 @@ public class AuthenticationController {
             Map<Object, Object> response = new HashMap<>();
             response.put("email", requestDto.getEmail());
             response.put("token", token);
-            log.info("Token was create to email: " + requestDto.getEmail());
+            log.info("Token was create for email: " + requestDto.getEmail());
             return ResponseEntity.ok(response);
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("invalid authentication", HttpStatus.FORBIDDEN);

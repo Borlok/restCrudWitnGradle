@@ -4,8 +4,6 @@ services:
     image: mysql
     restart: always
     container_name: db
-    volumes:
-      - ./database:/var/lib/mysql
     ports:
       - 2021:3306
     environment:
