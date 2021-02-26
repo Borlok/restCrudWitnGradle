@@ -11,12 +11,15 @@ public class File {
     @Enumerated(value = EnumType.STRING)
     @Column(name = "file_status")
     private FileStatus fileStatus;
+    @Column(name = "name")
+    private String name;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     public File() {
         id = 0;
+        name = "";
         fileStatus = FileStatus.DELETED;
     }
 
@@ -44,11 +47,20 @@ public class File {
         this.user = user;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "File{" +
                 "id=" + id +
                 ", fileStatus=" + fileStatus +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

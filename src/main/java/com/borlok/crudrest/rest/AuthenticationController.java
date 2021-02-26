@@ -1,8 +1,8 @@
 package com.borlok.crudrest.rest;
 
 import com.borlok.crudrest.dto.AuthenticationRequestDto;
-import com.borlok.crudrest.model.Access;
-import com.borlok.crudrest.repository.AccessRepository;
+import com.borlok.crudrest.model.User;
+import com.borlok.crudrest.repository.UserRepository;
 import com.borlok.crudrest.security.JwtTokenProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,14 +27,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/auth")
 public class AuthenticationController {
-    private AccessRepository accessRepository;
+    private UserRepository userRepository;
     private JwtTokenProvider jwtTokenProvider;
     private AuthenticationManager authenticationManager;
     private Logger log = LogManager.getLogger(this);
 
     @Autowired
-    public AuthenticationController(AccessRepository accessRepository, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager) {
-        this.accessRepository = accessRepository;
+    public AuthenticationController(UserRepository userRepository, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
     }
@@ -44,7 +44,7 @@ public class AuthenticationController {
         try {
             log.info("request to api/v1/auth/login");
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDto.getEmail(),requestDto.getPassword()));
-            Access user = accessRepository.findByEmail(requestDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
             String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole().name());
             Map<Object, Object> response = new HashMap<>();
             response.put("email", requestDto.getEmail());

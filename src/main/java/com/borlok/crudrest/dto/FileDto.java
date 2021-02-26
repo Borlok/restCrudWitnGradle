@@ -7,6 +7,7 @@ import com.borlok.crudrest.model.User;
 public class FileDto {
     private int id;
     private int user_id;
+    private String name;
     private String fileStatus;
 
     public FileDto() {
@@ -15,6 +16,7 @@ public class FileDto {
     public File toFile() {
         File file = new File();
         file.setId(id);
+        file.setName(name);
         file.setFileStatus(FileStatus.valueOf(fileStatus));
         return file;
     }
@@ -24,6 +26,7 @@ public class FileDto {
         fileDto.id = file.getId();
         if (file.getUser() == null)
             file.setUser(new User());
+        fileDto.name = file.getName();
         fileDto.user_id = file.getUser().getId();
         fileDto.fileStatus = file.getFileStatus().name();
         return fileDto;
@@ -51,6 +54,14 @@ public class FileDto {
 
     public void setFileStatus(String fileStatus) {
         this.fileStatus = fileStatus;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

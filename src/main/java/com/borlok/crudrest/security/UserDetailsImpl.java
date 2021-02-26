@@ -1,7 +1,6 @@
 package com.borlok.crudrest.security;
 
-import com.borlok.crudrest.model.Access;
-import com.borlok.crudrest.model.AccessStatus;
+import com.borlok.crudrest.model.AccountStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,15 +22,15 @@ public class UserDetailsImpl implements UserDetails {
         this.isActive = isActive;
     }
 
-    public static UserDetails fromAccess(Access access) {
+    public static UserDetails fromAccess(com.borlok.crudrest.model.User user) {
         return new User(
-                access.getEmail(),
-                access.getPassword(),
-                access.getStatus().equals(AccessStatus.ACTIVE),
-                access.getStatus().equals(AccessStatus.ACTIVE),
-                access.getStatus().equals(AccessStatus.ACTIVE),
-                access.getStatus().equals(AccessStatus.ACTIVE),
-                access.getRole().getAuthorities()
+                user.getEmail(),
+                user.getPassword(),
+                user.getAccount().getStatus().equals(AccountStatus.ACTIVE),
+                user.getAccount().getStatus().equals(AccountStatus.ACTIVE),
+                user.getAccount().getStatus().equals(AccountStatus.ACTIVE),
+                user.getAccount().getStatus().equals(AccountStatus.ACTIVE),
+                user.getRole().getAuthorities()
         );
     }
 
