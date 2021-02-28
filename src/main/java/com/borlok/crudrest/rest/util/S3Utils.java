@@ -3,8 +3,9 @@ package com.borlok.crudrest.rest.util;
 import com.borlok.crudrest.model.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.AwsCredentials;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -18,13 +19,16 @@ public class S3Utils {
 
     private static S3Client connect() {
         Region region = Region.EU_NORTH_1;
-        return S3Client.builder().region(region).build();
+        return S3Client.builder().credentialsProvider(() -> AwsBasicCredentials.create(
+                "AKIAVPRCUXGHJSZH43WQ",
+                "tLgmjk1QBPmbSt8G8SLS7jvZPIuk1/13t4L1RYqs"))
+                .region(region).build();
     }
 
     public static void addFile(MultipartFile multipartFile, File savedFile) throws IOException, IllegalArgumentException {
         Region region = Region.EU_NORTH_1;
         S3Client s3 = connect();
-        String bucket = BucketUtils.getBucketNameFromFile(savedFile);
+        String bucket = "borlokbucket";
         String key = BucketUtils.getKeyFromFile(savedFile);
         createBucket(s3, bucket, region);
 
@@ -66,7 +70,7 @@ public class S3Utils {
     }
 
     public static void getFile(File file) {
-        String bucket = BucketUtils.getBucketNameFromFile(file);
+        String bucket = "borlokbucket";
         String key = BucketUtils.getKeyFromFile(file);
         S3Client s3Client = connect();
         java.io.File path = new java.io.File(downloadPath);
@@ -81,7 +85,7 @@ public class S3Utils {
     }
 
     public static void cleanUp(File file) {
-        String bucket = BucketUtils.getBucketNameFromFile(file);
+        String bucket = "borlokbucket";
         String key = BucketUtils.getKeyFromFile(file);
         S3Client s3Client = connect();
         log.info("Begin cleaning process");
@@ -98,5 +102,6 @@ public class S3Utils {
         System.out.printf("%n");
         s3Client.close();
         log.info("Connection closed");
+
     }
 }
