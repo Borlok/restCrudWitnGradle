@@ -4,7 +4,7 @@ import com.borlok.crudrest.model.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -19,9 +19,7 @@ public class S3Utils {
 
     private static S3Client connect() {
         Region region = Region.EU_NORTH_1;
-        return S3Client.builder().credentialsProvider(() -> AwsBasicCredentials.create(
-                "AKIAVPRCUXGHJSZH43WQ",
-                "tLgmjk1QBPmbSt8G8SLS7jvZPIuk1/13t4L1RYqs"))
+        return S3Client.builder().credentialsProvider(AnonymousCredentialsProvider.create())
                 .region(region).build();
     }
 
