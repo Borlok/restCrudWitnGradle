@@ -19,7 +19,7 @@ public class S3Utils {
 
     private static S3Client connect() {
         Region region = Region.EU_NORTH_1;
-        return S3Client.builder().credentialsProvider(AnonymousCredentialsProvider.create())
+        return S3Client.builder()
                 .region(region).build();
     }
 
