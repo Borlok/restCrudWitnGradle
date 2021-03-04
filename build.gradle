@@ -10,7 +10,7 @@ application {
 }
 
 group = 'com.borlok'
-version = '2.2.6'
+version = '2.2.9'
 sourceCompatibility = '11'
 
 configurations {
@@ -42,4 +42,5 @@ dependencies {
 	implementation platform('software.amazon.awssdk:bom:2.15.0')
 	implementation 'software.amazon.awssdk:kinesis'
 	implementation group: 'software.amazon.awssdk', name: 's3', version: '2.16.5'
+	implementation group: 'software.amazon.awssdk', name: 'elasticbeanstalk', version: '2.16.10'
 }
