@@ -11,6 +11,9 @@ import com.borlok.crudrest.service.UserService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,6 +21,7 @@ import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,11 +69,15 @@ public class FileRestController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('access:user')")
-    public FileDto getById(@PathVariable("id") Integer id) {
+    public ResponseEntity<?> getById(@PathVariable("id") Integer id) {
         log.info("Get file with id: " + id);
         File file = fileService.getById(id);
-        S3Utils.getFile(file);
-        return FileDto.fromFile(file);
+        try {
+            return ResponseEntity.ok(S3Utils.getFile(file));
+        } catch (NullPointerException e) {
+            log.info("File not found");
+        }
+        return new ResponseEntity<>("File not found", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping

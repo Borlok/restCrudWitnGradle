@@ -4,9 +4,7 @@ import com.borlok.crudrest.model.File;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
-import software.amazon.awssdk.auth.credentials.AnonymousCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-import software.amazon.awssdk.auth.credentials.InstanceProfileCredentialsProvider;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -16,12 +14,11 @@ import java.io.IOException;
 
 public class S3Utils {
     private static Logger log = LogManager.getRootLogger();
-    private static String downloadPath = "./downloads/";
     private static String bucket = "borlokbucket";
 
     private static S3Client connect() {
         Region region = Region.EU_NORTH_1;
-        return S3Client.builder().credentialsProvider(AnonymousCredentialsProvider.create())
+        return S3Client.builder()
                 .region(region).build();
     }
 
@@ -65,18 +62,20 @@ public class S3Utils {
         }
     }
 
-    public static void getFile(File file) {
-        String key = BucketUtils.getKeyFromFile(file);
-        S3Client s3Client = connect();
-        java.io.File path = new java.io.File(downloadPath);
-        if (!path.exists()) {
-            path.mkdir();
+    public static byte[] getFile(File file) {
+        try {
+            String key = BucketUtils.getKeyFromFile(file);
+            S3Client s3Client = connect();
+            ResponseInputStream<GetObjectResponse> response = s3Client.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build());
+            byte [] returnedFile = response.readAllBytes();
+            log.info("File was download");
+            s3Client.close();
+            log.info("Connection closed");
+            return returnedFile;
+        } catch (Exception e) {
+            log.error("File is already exists");
         }
-        path = new java.io.File(downloadPath + file.getName());
-        s3Client.getObject(GetObjectRequest.builder().bucket(bucket).key(key).build(), path.toPath());
-        log.info("File was download");
-        s3Client.close();
-        log.info("Connection closed");
+        return null;
     }
 
     public static void cleanUp(File file) {
